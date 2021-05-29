@@ -95,7 +95,7 @@ void Display::DisplayHearthBeat(int beat_bpm)
     // Print Heart Beat
     String heart_beat_msg = String(beat_bpm);
 
-    Serial.println(heart_beat_msg);
+    // Serial.println(heart_beat_msg);
 
     // Print Heart Beat
     this->display.setTextSize(2);
@@ -124,7 +124,7 @@ void Display::DisplayTemperature(float temp)
     // Print Temp
     String temp_msg = String(temp, 1);
 
-    Serial.println(temp_msg);
+    // Serial.println(temp_msg);
 
     this->display.setTextSize(2);
     this->display.setTextColor(WHITE);
@@ -155,7 +155,7 @@ void Display::DisplayOximeter(int SaO2)
     // Print Oximeter
     String oxi_msg = String(SaO2);
 
-    Serial.println(oxi_msg);
+    // Serial.println(oxi_msg);
 
     this->display.setTextSize(2);
     this->display.setTextColor(WHITE);
