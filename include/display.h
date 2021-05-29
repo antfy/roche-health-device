@@ -14,7 +14,9 @@ public:
     // funções
     void Start();
 
-    void HearthBeat(int beat_bpm);
+    void DisplayHearthBeat(int beat_bpm);
+    void DisplayTemperature(float temp);
+    void DisplayOximeter(int SaO2);
 
 private:
     // funções

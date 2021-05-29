@@ -31,6 +31,7 @@ void Display::Start()
             ;
     }
 
+    this->display.clearDisplay();
     delay(1000);
 
     this->ShowStartingLogo();
@@ -81,7 +82,7 @@ void Display::ShowStartingLogo()
     this->display.clearDisplay();
 }
 
-void Display::HearthBeat(int beat_bpm)
+void Display::DisplayHearthBeat(int beat_bpm)
 {
     this->display.clearDisplay();
 
@@ -92,14 +93,78 @@ void Display::HearthBeat(int beat_bpm)
         HEART_ICON, HEART_ICON_WIDTH, HEART_ICON_HEIGHT, 1);
 
     // Print Heart Beat
-    String heart_beat_msg = String(beat_bpm) + " BPM";
+    String heart_beat_msg = String(beat_bpm);
 
     Serial.println(heart_beat_msg);
 
+    // Print Heart Beat
     this->display.setTextSize(2);
     this->display.setTextColor(WHITE);
-    this->display.setCursor(23, 40);
+    this->display.setCursor(30, 40);
     this->display.print(heart_beat_msg);
+
+    // Print Heart Beat symbol
+    this->display.setCursor(75, 40);
+    this->display.print("BPM");
+
+    this->display.display();
+}
+
+void Display::DisplayTemperature(float temp)
+{
+
+    this->display.clearDisplay();
+
+    // Print Temp Icon
+    this->display.drawBitmap(
+        (this->display.width() - TEMPERATURA_ICON_WIDTH) / 2,
+        8,
+        TEMPERATURA_ICON, TEMPERATURA_ICON_WIDTH, TEMPERATURA_ICON_HEIGHT, 1);
+
+    // Print Temp
+    String temp_msg = String(temp, 1);
+
+    Serial.println(temp_msg);
+
+    this->display.setTextSize(2);
+    this->display.setTextColor(WHITE);
+    this->display.setCursor(20, 40);
+    this->display.print(temp_msg);
+
+    // Print Temp symbol
+    this->display.setCursor(85, 40);
+
+    this->display.cp437(true);
+    this->display.write(248); //  simbolo ° em Code page 437
+    this->display.print("C");
+
+    this->display.display();
+}
+
+void Display::DisplayOximeter(int SaO2)
+{
+
+    this->display.clearDisplay();
+
+    // Print Oximeter Icon
+    this->display.drawBitmap(
+        (this->display.width() - OXIMETRO_ICON_ICON_WIDTH) / 2,
+        8,
+        OXIMETRO_ICON, OXIMETRO_ICON_ICON_WIDTH, OXIMETRO_ICON_ICON_HEIGHT, 1);
+
+    // Print Oximeter
+    String oxi_msg = String(SaO2);
+
+    Serial.println(oxi_msg);
+
+    this->display.setTextSize(2);
+    this->display.setTextColor(WHITE);
+    this->display.setCursor(25, 40);
+    this->display.print(oxi_msg);
+
+    // Print Oximeter symbol
+    this->display.setCursor(75, 40);
+    this->display.print("SaO2");
 
     this->display.display();
 }

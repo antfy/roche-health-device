@@ -20,17 +20,29 @@ void setup()
   display.Start();
 }
 
-int i = 100;
-
 void loop()
 {
-  if (i > 190)
-  {
-    i = 100;
-  };
+  // heart beat
+  display.DisplayHearthBeat(1);
+  delay(2000);
+  display.DisplayHearthBeat(10);
+  delay(2000);
+  display.DisplayHearthBeat(100);
+  delay(2000);
 
-  display.HearthBeat(i);
+  // temperature
+  display.DisplayTemperature(1.0);
+  delay(2000);
+  display.DisplayTemperature(10.345);
+  delay(2000);
+  display.DisplayTemperature(100.67);
+  delay(2000);
 
-  delay(1000);
-  i++;
+  // oximeter
+  display.DisplayOximeter(3);
+  delay(2000);
+  display.DisplayOximeter(30);
+  delay(2000);
+  display.DisplayOximeter(300);
+  delay(2000);
 }
