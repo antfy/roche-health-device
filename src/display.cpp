@@ -32,7 +32,6 @@ void Display::Start()
     }
 
     this->display.clearDisplay();
-    delay(1000);
 
     this->ShowStartingLogo();
 }
@@ -165,6 +164,35 @@ void Display::DisplayOximeter(int SaO2)
     // Print Oximeter symbol
     this->display.setCursor(75, 40);
     this->display.print("SaO2");
+
+    this->display.display();
+}
+
+void Display::DisplayBluetooth(bool connected)
+{
+    this->display.fillRect(110, 5, BlUETOOTH_DISCONNECTED_WIDTH, BlUETOOTH_DISCONNECTED_HEIGHT, BLACK);
+
+    // this->display.clearDisplay();
+
+    if (connected)
+    {
+        this->display.drawBitmap(
+            110,
+            5,
+            BlUETOOTH_CONNECTED_ICON, BlUETOOTH_CONNECTED_ICON_WIDTH, BlUETOOTH_CONNECTED_ICON_HEIGHT, 1);
+    }
+    else
+    {
+        this->display.drawBitmap(
+            110,
+            5,
+            BlUETOOTH_DISCONNECTED_ICON, BlUETOOTH_DISCONNECTED_WIDTH, BlUETOOTH_DISCONNECTED_HEIGHT, 1);
+    }
+
+    // this->display.setTextSize(2);
+    // this->display.setTextColor(WHITE);
+    // this->display.setCursor(25, 40);
+    // this->display.print("Bluetooth Desconectado...");
 
     this->display.display();
 }

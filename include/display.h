@@ -17,16 +17,17 @@ public:
     void DisplayHearthBeat(int beat_bpm);
     void DisplayTemperature(float temp);
     void DisplayOximeter(int SaO2);
+    void DisplayBluetooth(bool connected);
 
 private:
     // funções
     void ShowStartingLogo();
-
-    // atributos
-    uint8_t SCREEN_WIDTH{128};
-    uint8_t SCREEN_HEIGHT{64};
-    int DISPLAY_ADDRESS_I2C{0x3C};
-
+    
     // atributos
     Adafruit_SSD1306 display;
+    uint8_t SCREEN_WIDTH{128};
+    uint8_t SCREEN_HEIGHT{64};
+    
+    int DISPLAY_ADDRESS_I2C{0x3C};
+    
 };

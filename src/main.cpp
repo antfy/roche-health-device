@@ -7,6 +7,8 @@
 #include <BLEUtils.h>
 #include <BLE2902.h>
 
+#include <ArduinoJson.h>
+
 #include "display.h"
 
 // VARIAVEIS GLOBAIS #############################################################
@@ -23,6 +25,10 @@ BLECharacteristic *bleSendCharacteristic = NULL;
 BLEServer *bleServer = NULL;
 bool deviceConnected = false;
 bool startBleReconnection = false;
+
+
+// Sensores
+StaticJsonDocument<200> sensorsData;
 
 #define SERVICE_UUID "4eba7cbc-a351-464c-bd64-5a0af8b52a8b" // UART service UUID
 #define CHARACTERISTIC_UUID_RX "cc0eace0-430b-4ccd-add4-6556737c882b"
@@ -98,45 +104,73 @@ void setup()
 
   // Inicializando display OLED
   display.Start();
+  display.DisplayBluetooth(deviceConnected);
+  delay(5000);
 }
 
 // LOOP ####################################################################
 void loop()
 {
 
+  display.DisplayBluetooth(deviceConnected);
+
   // Dispositivo conectado via bluetooth
   while (deviceConnected)
   {
-
+      
     // heart beat
     display.DisplayHearthBeat(1);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
     display.DisplayHearthBeat(10);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
     display.DisplayHearthBeat(100);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
+
+    sensorsData["heartBeat"] = 100;
 
     // temperature
     display.DisplayTemperature(1.0);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
     display.DisplayTemperature(10.345);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
     display.DisplayTemperature(100.67);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
+
+    sensorsData["temperature"] = 100.67;
 
     // oximeter
     display.DisplayOximeter(3);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
     display.DisplayOximeter(30);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
     display.DisplayOximeter(300);
-    delay(2000);
+    display.DisplayBluetooth(deviceConnected);
+    delay(1000);
+
+
+    sensorsData["oximeter"] = 300;
+
+
+    
 
     // Enviando um valor por bluetooth
-    float valor = 19.78;
+    // float valor = 19.78;
+    char txString[200];
+    // dtostrf(valor, 2, 2, txString);
 
-    char txString[8];
-    dtostrf(valor, 2, 2, txString);
+    // String output;
+    serializeJson(sensorsData, txString);
+
+    Serial.println(txString);
+    // serializeJsonPretty(sensorsData, Serial);
 
     bleSendCharacteristic->setValue(txString);
     bleSendCharacteristic->notify();
@@ -154,12 +188,14 @@ void loop()
 void bleInit()
 {
   // Cria um dispositivo BLE
+  uint16_t mtu = 200;
+  BLEDevice::setMTU(mtu); // tamanho do pacote em bytes que o servidor bluetooth enviará. Esse parametro deve ser setado no smartphone também
   BLEDevice::init(BLUETOOTH_NAME);
 
   // Configura o dispositivo como Servidor BLE
   BLEServer *bleServer = BLEDevice::createServer();
   bleServer->setCallbacks(new BluetoothServerCallbacks());
-
+  
   // Cria o servico UART
   BLEService *bleService = bleServer->createService(SERVICE_UUID);
 
