@@ -19,8 +19,10 @@
 Display display(SCREEN_WIDTH, SCREEN_HEIGHT, DISPLAY_ADDRESS_I2C);
 
 // Bluetooth
-BLECharacteristic *bleSendCharacteristic;
+BLECharacteristic *bleSendCharacteristic = NULL;
+BLEServer *bleServer = NULL;
 bool deviceConnected = false;
+bool startBleReconnection = false;
 
 #define SERVICE_UUID "4eba7cbc-a351-464c-bd64-5a0af8b52a8b" // UART service UUID
 #define CHARACTERISTIC_UUID_RX "cc0eace0-430b-4ccd-add4-6556737c882b"
@@ -31,6 +33,7 @@ bool deviceConnected = false;
 
 // Bluetooth
 void bleInit();
+void bleReconnect(BLEServer *bleServer);
 
 // CLASSES GLOBAIS ##############################################################
 
@@ -38,14 +41,15 @@ class BluetoothServerCallbacks : public BLEServerCallbacks
 {
   void onConnect(BLEServer *pServer)
   {
-    Serial.println("CONECTADO");
+    Serial.println("Bluetooth Conectado");
     deviceConnected = true;
   };
 
   void onDisconnect(BLEServer *pServer)
   {
-    Serial.println("DESCONECTADO");
+    Serial.println("Bluetooth Desconectado");
     deviceConnected = false;
+    startBleReconnection = true;
   }
 };
 
@@ -99,8 +103,11 @@ void setup()
 // LOOP ####################################################################
 void loop()
 {
-  if (deviceConnected)
+
+  // Dispositivo conectado via bluetooth
+  while (deviceConnected)
   {
+
     // heart beat
     display.DisplayHearthBeat(1);
     delay(2000);
@@ -135,8 +142,13 @@ void loop()
     bleSendCharacteristic->notify();
   }
 
-  // TODO implementar reconexão automática com o bluetooth depois
-  
+  // Dispositivo desconectado ao bluetooth]
+  // Inicializa a reconexão com o bluetooth
+  if (startBleReconnection)
+  {
+    bleReconnect(bleServer);
+    startBleReconnection = false;
+  }
 }
 
 void bleInit()
@@ -170,5 +182,14 @@ void bleInit()
 
   // Inicia a descoberta do ESP32
   bleServer->getAdvertising()->start();
-  Serial.println("Esperando um cliente se conectar...");
+  Serial.println("Esperando conexão Bluetooth...");
+}
+
+void bleReconnect(BLEServer *bleServer)
+{
+
+  // Inicia a descoberta do ESP32
+  bleServer->startAdvertising();
+
+  Serial.println("Reconectado ao Bluetooth...");
 }
