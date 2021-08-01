@@ -102,8 +102,9 @@ void setup()
 
   // Inicializando display OLED
   display.Start();
+  display.ShowStartingLogo();
   display.DisplayBluetooth(deviceConnected);
-  delay(5000);
+
 }
 
 // LOOP ####################################################################

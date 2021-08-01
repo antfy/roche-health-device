@@ -38,7 +38,7 @@ void Display::Start()
 
 void Display::ShowStartingLogo()
 {
-    this->display.clearDisplay();
+    this->ClearDisplayMessage();
 
     // Print Antfy Logo
     this->display.drawBitmap(
@@ -185,11 +185,20 @@ void Display::DisplayBluetooth(bool connected)
             BlUETOOTH_CONNECTED_ICON, BlUETOOTH_CONNECTED_ICON_WIDTH, BlUETOOTH_CONNECTED_ICON_HEIGHT, 1);
     }
     else
-    {
+    {   
+        this->ClearDisplayMessage();
+
         this->display.drawBitmap(
             110,
             5,
             BlUETOOTH_DISCONNECTED_ICON, BlUETOOTH_DISCONNECTED_WIDTH, BlUETOOTH_DISCONNECTED_HEIGHT, 1);
+
+        this->display.setTextSize(1);
+        this->display.setTextColor(WHITE);
+        this->display.setCursor(25, 26);
+        this->display.print("Bluetooth");
+        this->display.setCursor(25, 40);
+        this->display.print("Desconectado");
     }
 
     this->display.display();
