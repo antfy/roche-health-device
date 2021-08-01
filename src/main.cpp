@@ -25,10 +25,7 @@ BLECharacteristic *bleSendCharacteristic = NULL;
 BLEServer *bleServer = NULL;
 bool deviceConnected = false;
 bool startBleReconnection = false;
-
-
-// Sensores
-StaticJsonDocument<200> sensorsData;
+String message;
 
 #define SERVICE_UUID "4eba7cbc-a351-464c-bd64-5a0af8b52a8b" // UART service UUID
 #define CHARACTERISTIC_UUID_RX "cc0eace0-430b-4ccd-add4-6556737c882b"
@@ -40,6 +37,7 @@ StaticJsonDocument<200> sensorsData;
 // Bluetooth
 void bleInit();
 void bleReconnect(BLEServer *bleServer);
+void bleSend(String message);
 
 // CLASSES GLOBAIS ##############################################################
 
@@ -117,53 +115,57 @@ void loop()
   // Dispositivo conectado via bluetooth
   while (deviceConnected)
   {
-      
     // heart beat
     display.DisplayHearthBeat(10);
     display.DisplayBluetooth(deviceConnected);
-    delay(1000);
-    display.DisplayHearthBeat(140);
-    display.DisplayBluetooth(deviceConnected);
+    message = "heartBeat:" + String(10);
+    bleSend(message);
+
     delay(1000);
 
-    sensorsData["heartBeat"] = 140;
+    display.DisplayHearthBeat(140);
+    display.DisplayBluetooth(deviceConnected);
+    message = "heartBeat:" + String(140);
+    bleSend(message);
+
+    delay(1000);
 
     // temperature
     display.DisplayTemperature(13);
     display.DisplayBluetooth(deviceConnected);
-    delay(1000);
-    display.DisplayTemperature(25.5);
-    display.DisplayBluetooth(deviceConnected);
+    message = "temperature:" + String(13);
+    bleSend(message);
+
     delay(1000);
 
-    sensorsData["temperature"] = 25.5;
+    display.DisplayTemperature(25.5);
+    display.DisplayBluetooth(deviceConnected);
+    message = "temperature:" + String(25.5);
+    bleSend(message);
+
+    delay(1000);
 
     // oximeter
     display.DisplayOximeter(3);
     display.DisplayBluetooth(deviceConnected);
+    message = "oximeter:" + String(3);
+    bleSend(message);
+
     delay(1000);
     display.DisplayOximeter(30);
     display.DisplayBluetooth(deviceConnected);
+    message = "oximeter:" + String(30);
+    bleSend(message);
+
     delay(1000);
+
     display.DisplayOximeter(300);
     display.DisplayBluetooth(deviceConnected);
+    message = "oximeter:" + String(300);
+    bleSend(message);
+
     delay(1000);
 
-    sensorsData["oximeter"] = 300;
-
-    // Enviando um valor por bluetooth
-    // float valor = 19.78;
-    char txString[200];
-    // dtostrf(valor, 2, 2, txString);
-
-    // String output;
-    serializeJson(sensorsData, txString);
-
-    Serial.println(txString);
-    // serializeJsonPretty(sensorsData, Serial);
-
-    bleSendCharacteristic->setValue(txString);
-    bleSendCharacteristic->notify();
   }
 
   // Dispositivo desconectado ao bluetooth]
@@ -218,4 +220,19 @@ void bleReconnect(BLEServer *bleServer)
   bleServer->startAdvertising();
 
   Serial.println("Reconectado ao Bluetooth...");
+}
+
+void bleSend(String message) {
+
+  int n = message.length();
+
+  char txMessage[n + 1];
+
+  // copying the contents of the
+  // string to char array
+  strcpy(txMessage, message.c_str());
+  
+  bleSendCharacteristic->setValue(txMessage);
+  bleSendCharacteristic->notify();
+
 }
