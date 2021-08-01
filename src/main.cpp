@@ -119,30 +119,24 @@ void loop()
   {
       
     // heart beat
-    display.DisplayHearthBeat(1);
-    display.DisplayBluetooth(deviceConnected);
-    delay(1000);
     display.DisplayHearthBeat(10);
     display.DisplayBluetooth(deviceConnected);
     delay(1000);
-    display.DisplayHearthBeat(100);
+    display.DisplayHearthBeat(140);
     display.DisplayBluetooth(deviceConnected);
     delay(1000);
 
-    sensorsData["heartBeat"] = 100;
+    sensorsData["heartBeat"] = 140;
 
     // temperature
-    display.DisplayTemperature(1.0);
+    display.DisplayTemperature(13);
     display.DisplayBluetooth(deviceConnected);
     delay(1000);
-    display.DisplayTemperature(10.345);
-    display.DisplayBluetooth(deviceConnected);
-    delay(1000);
-    display.DisplayTemperature(100.67);
+    display.DisplayTemperature(25.5);
     display.DisplayBluetooth(deviceConnected);
     delay(1000);
 
-    sensorsData["temperature"] = 100.67;
+    sensorsData["temperature"] = 25.5;
 
     // oximeter
     display.DisplayOximeter(3);
@@ -155,11 +149,7 @@ void loop()
     display.DisplayBluetooth(deviceConnected);
     delay(1000);
 
-
     sensorsData["oximeter"] = 300;
-
-
-    
 
     // Enviando um valor por bluetooth
     // float valor = 19.78;

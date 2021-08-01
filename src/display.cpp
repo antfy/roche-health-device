@@ -7,7 +7,7 @@
 #include "display.h"
 #include "display_images_bmp.h"
 
-// construtores
+// Construtores
 Display::Display(uint8_t SCREEN_WIDTH, uint8_t SCREEN_HEIGHT, int DISPLAY_ADDRESS_I2C)
 {
     this->SCREEN_WIDTH = SCREEN_WIDTH;
@@ -20,7 +20,7 @@ Display::Display(uint8_t SCREEN_WIDTH, uint8_t SCREEN_HEIGHT, int DISPLAY_ADDRES
     this->display = display;
 }
 
-// funções
+// Funções
 void Display::Start()
 {
 
@@ -33,7 +33,7 @@ void Display::Start()
 
     this->display.clearDisplay();
 
-    this->ShowStartingLogo();
+    // this->ShowStartingLogo();
 }
 
 void Display::ShowStartingLogo()
@@ -81,29 +81,35 @@ void Display::ShowStartingLogo()
     this->display.clearDisplay();
 }
 
+void Display::ClearDisplayHeader()
+{
+    this->display.fillRect(1, 1, 128, 15, BLACK);
+}
+
+void Display::ClearDisplayMessage()
+{
+    this->display.fillRect(1, 23, 128, 30, BLACK);
+}
+
 void Display::DisplayHearthBeat(int beat_bpm)
 {
-    this->display.clearDisplay();
+    this->ClearDisplayMessage();
 
     // Print Heart Icon
-    this->display.drawBitmap(
-        (this->display.width() - HEART_ICON_WIDTH) / 2,
-        10,
-        HEART_ICON, HEART_ICON_WIDTH, HEART_ICON_HEIGHT, 1);
+    this->display.drawBitmap(1, 23, HEART_ICON, HEART_ICON_WIDTH, HEART_ICON_HEIGHT, 1);
 
     // Print Heart Beat
     String heart_beat_msg = String(beat_bpm);
 
-    // Serial.println(heart_beat_msg);
-
     // Print Heart Beat
-    this->display.setTextSize(2);
+    this->display.setTextSize(3);
     this->display.setTextColor(WHITE);
-    this->display.setCursor(30, 40);
+    this->display.setCursor(32, 26);
     this->display.print(heart_beat_msg);
 
     // Print Heart Beat symbol
-    this->display.setCursor(75, 40);
+    this->display.setTextSize(1);
+    this->display.setCursor(100, 26);
     this->display.print("BPM");
 
     this->display.display();
@@ -112,12 +118,12 @@ void Display::DisplayHearthBeat(int beat_bpm)
 void Display::DisplayTemperature(float temp)
 {
 
-    this->display.clearDisplay();
+    this->ClearDisplayMessage();
 
     // Print Temp Icon
     this->display.drawBitmap(
-        (this->display.width() - TEMPERATURA_ICON_WIDTH) / 2,
-        8,
+        1,
+        23,
         TEMPERATURA_ICON, TEMPERATURA_ICON_WIDTH, TEMPERATURA_ICON_HEIGHT, 1);
 
     // Print Temp
@@ -125,14 +131,14 @@ void Display::DisplayTemperature(float temp)
 
     // Serial.println(temp_msg);
 
-    this->display.setTextSize(2);
+    this->display.setTextSize(3);
     this->display.setTextColor(WHITE);
-    this->display.setCursor(20, 40);
+    this->display.setCursor(32, 26);
     this->display.print(temp_msg);
 
     // Print Temp symbol
-    this->display.setCursor(85, 40);
-
+    this->display.setTextSize(1);
+    this->display.setCursor(109, 26);
     this->display.cp437(true);
     this->display.write(248); //  simbolo ° em Code page 437
     this->display.print("C");
@@ -143,26 +149,25 @@ void Display::DisplayTemperature(float temp)
 void Display::DisplayOximeter(int SaO2)
 {
 
-    this->display.clearDisplay();
+    this->ClearDisplayMessage();
 
     // Print Oximeter Icon
     this->display.drawBitmap(
-        (this->display.width() - OXIMETRO_ICON_ICON_WIDTH) / 2,
-        8,
+        1,
+        23,
         OXIMETRO_ICON, OXIMETRO_ICON_ICON_WIDTH, OXIMETRO_ICON_ICON_HEIGHT, 1);
 
     // Print Oximeter
     String oxi_msg = String(SaO2);
 
-    // Serial.println(oxi_msg);
-
-    this->display.setTextSize(2);
+    this->display.setTextSize(3);
     this->display.setTextColor(WHITE);
-    this->display.setCursor(25, 40);
+    this->display.setCursor(32, 26);
     this->display.print(oxi_msg);
 
     // Print Oximeter symbol
-    this->display.setCursor(75, 40);
+    this->display.setTextSize(1);
+    this->display.setCursor(100, 26);
     this->display.print("SaO2");
 
     this->display.display();
@@ -170,9 +175,7 @@ void Display::DisplayOximeter(int SaO2)
 
 void Display::DisplayBluetooth(bool connected)
 {
-    this->display.fillRect(110, 5, BlUETOOTH_DISCONNECTED_WIDTH, BlUETOOTH_DISCONNECTED_HEIGHT, BLACK);
-
-    // this->display.clearDisplay();
+    this->ClearDisplayHeader();
 
     if (connected)
     {
@@ -188,11 +191,6 @@ void Display::DisplayBluetooth(bool connected)
             5,
             BlUETOOTH_DISCONNECTED_ICON, BlUETOOTH_DISCONNECTED_WIDTH, BlUETOOTH_DISCONNECTED_HEIGHT, 1);
     }
-
-    // this->display.setTextSize(2);
-    // this->display.setTextColor(WHITE);
-    // this->display.setCursor(25, 40);
-    // this->display.print("Bluetooth Desconectado...");
 
     this->display.display();
 }
