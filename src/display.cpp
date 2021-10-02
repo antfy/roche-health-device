@@ -185,7 +185,7 @@ void Display::DisplayBluetooth(bool connected)
             BlUETOOTH_CONNECTED_ICON, BlUETOOTH_CONNECTED_ICON_WIDTH, BlUETOOTH_CONNECTED_ICON_HEIGHT, 1);
     }
     else
-    {   
+    {
         this->ClearDisplayMessage();
 
         this->display.drawBitmap(
@@ -200,6 +200,20 @@ void Display::DisplayBluetooth(bool connected)
         this->display.setCursor(25, 40);
         this->display.print("Desconectado");
     }
+
+    this->display.display();
+}
+
+void Display::DisplayWarningMessage()
+{
+    this->ClearDisplayMessage();
+
+    this->display.setTextSize(1);
+    this->display.setTextColor(WHITE);
+    this->display.setCursor(20, 26);
+    this->display.print("Aproxime a mao");
+    this->display.setCursor(20, 40);
+    this->display.print("no local indicado");
 
     this->display.display();
 }

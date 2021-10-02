@@ -11,6 +11,7 @@
 
 #include "display.h"
 #include "sensor_temperatura.h"
+#include "sensor_proximidade.h"
 
 // VARIAVEIS GLOBAIS #############################################################
 
@@ -36,6 +37,11 @@ String message;
 // Sensor de Temperatura
 SensorTemperatura sensor_temperatura;
 float body_temp = 0;
+
+// Sensor de Proximidade
+#define SENSOR_PROXIMIDADE_PIN 34
+
+SensorProximidade sensor_proximidade(SENSOR_PROXIMIDADE_PIN);
 
 // PROTÓTIPOS DE FUNÇÕES ########################################################
 
@@ -140,6 +146,11 @@ void loop()
     delay(1000);
 
     // temperature
+    while(!sensor_proximidade.Activated())
+    {
+      display.DisplayWarningMessage();
+    }
+    
     body_temp = sensor_temperatura.GetObjAmbiente();
 
     display.DisplayTemperature(body_temp);

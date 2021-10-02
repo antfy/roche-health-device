@@ -20,6 +20,7 @@ public:
     void DisplayTemperature(float temp);
     void DisplayOximeter(int SaO2);
     void DisplayBluetooth(bool connected);
+    void DisplayWarningMessage();
     
 private:
     // atributos
