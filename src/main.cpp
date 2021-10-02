@@ -10,6 +10,7 @@
 #include <ArduinoJson.h>
 
 #include "display.h"
+#include "sensor_temperatura.h"
 
 // VARIAVEIS GLOBAIS #############################################################
 
@@ -31,6 +32,10 @@ String message;
 #define CHARACTERISTIC_UUID_RX "cc0eace0-430b-4ccd-add4-6556737c882b"
 #define DHTDATA_CHAR_UUID "0d7df51f-d18f-4617-b0f4-f5c30fc5a0d3"
 #define BLUETOOTH_NAME "ESP32_DEV"
+
+// Sensor de Temperatura
+SensorTemperatura sensor_temperatura;
+float body_temp = 0;
 
 // PROTÓTIPOS DE FUNÇÕES ########################################################
 
@@ -100,6 +105,9 @@ void setup()
   // Inicializando o bluetooth
   bleInit();
 
+  // Inicializando sensor de temperatura
+  sensor_temperatura.Start();
+
   // Inicializando display OLED
   display.Start();
   display.ShowStartingLogo();
@@ -132,9 +140,12 @@ void loop()
     delay(1000);
 
     // temperature
-    display.DisplayTemperature(13);
+    body_temp = sensor_temperatura.GetObjAmbiente();
+
+    display.DisplayTemperature(body_temp);
+
     display.DisplayBluetooth(deviceConnected);
-    message = "temperature:" + String(13);
+    message = "temperature:" + String(body_temp);
     bleSend(message);
 
     delay(1000);
