@@ -204,16 +204,16 @@ void Display::DisplayBluetooth(bool connected)
     this->display.display();
 }
 
-void Display::DisplayWarningMessage()
+void Display::DisplayWarningMessage(String l1, String l2)
 {
     this->ClearDisplayMessage();
 
     this->display.setTextSize(1);
     this->display.setTextColor(WHITE);
     this->display.setCursor(20, 26);
-    this->display.print("Aproxime a mao");
+    this->display.print(l1);
     this->display.setCursor(20, 40);
-    this->display.print("no local indicado");
+    this->display.print(l2);
 
     this->display.display();
 }

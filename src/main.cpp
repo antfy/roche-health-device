@@ -12,6 +12,7 @@
 #include "display.h"
 #include "sensor_temperatura.h"
 #include "sensor_proximidade.h"
+#include "buzzer.h"
 
 // VARIAVEIS GLOBAIS #############################################################
 
@@ -42,6 +43,11 @@ float body_temp = 0;
 #define SENSOR_PROXIMIDADE_PIN 34
 
 SensorProximidade sensor_proximidade(SENSOR_PROXIMIDADE_PIN);
+
+// Buzzer
+#define BUZZER_PIN 33
+
+Buzzer buzzer(BUZZER_PIN);
 
 // PROTÓTIPOS DE FUNÇÕES ########################################################
 
@@ -124,7 +130,10 @@ void setup()
 // LOOP ####################################################################
 void loop()
 {
-
+  // digitalWrite(BUZZER_PIN, HIGH);
+  // delay(3000);
+  // digitalWrite(BUZZER_PIN, LOW);
+  // delay(3000);
   display.DisplayBluetooth(deviceConnected);
 
   // Dispositivo conectado via bluetooth
@@ -135,7 +144,7 @@ void loop()
     display.DisplayBluetooth(deviceConnected);
     message = "heartBeat:" + String(10);
     bleSend(message);
-
+    
     delay(1000);
 
     display.DisplayHearthBeat(140);
@@ -148,7 +157,7 @@ void loop()
     // temperature
     while(!sensor_proximidade.Activated())
     {
-      display.DisplayWarningMessage();
+      display.DisplayWarningMessage("Aproxime a mao", "no local indicado");
     }
     
     body_temp = sensor_temperatura.GetObjAmbiente();
@@ -188,6 +197,8 @@ void loop()
     bleSend(message);
 
     delay(1000);
+
+    buzzer.Bip(2, 200);
 
   }
 
