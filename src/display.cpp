@@ -210,9 +210,9 @@ void Display::DisplayWarningMessage(String l1, String l2)
 
     this->display.setTextSize(1);
     this->display.setTextColor(WHITE);
-    this->display.setCursor(20, 26);
+    this->display.setCursor(10, 26);
     this->display.print(l1);
-    this->display.setCursor(20, 40);
+    this->display.setCursor(10, 40);
     this->display.print(l2);
 
     this->display.display();

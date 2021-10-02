@@ -124,27 +124,24 @@ void setup()
   display.Start();
   display.ShowStartingLogo();
   display.DisplayBluetooth(deviceConnected);
-
 }
 
 // LOOP ####################################################################
+bool realizarMedicoes = true;
 void loop()
 {
-  // digitalWrite(BUZZER_PIN, HIGH);
-  // delay(3000);
-  // digitalWrite(BUZZER_PIN, LOW);
-  // delay(3000);
+
   display.DisplayBluetooth(deviceConnected);
 
   // Dispositivo conectado via bluetooth
-  while (deviceConnected)
+  while (deviceConnected && realizarMedicoes)
   {
     // heart beat
     display.DisplayHearthBeat(10);
     display.DisplayBluetooth(deviceConnected);
     message = "heartBeat:" + String(10);
     bleSend(message);
-    
+
     delay(1000);
 
     display.DisplayHearthBeat(140);
@@ -155,11 +152,11 @@ void loop()
     delay(1000);
 
     // temperature
-    while(!sensor_proximidade.Activated())
+    while (!sensor_proximidade.Activated())
     {
       display.DisplayWarningMessage("Aproxime a mao", "no local indicado");
     }
-    
+
     body_temp = sensor_temperatura.GetObjAmbiente();
 
     display.DisplayTemperature(body_temp);
@@ -199,10 +196,12 @@ void loop()
     delay(1000);
 
     buzzer.Bip(2, 200);
-
+    display.DisplayWarningMessage("Medicoes realizadas", "com sucesso !");
+    realizarMedicoes = false;
+    bleSend("done");
   }
 
-  // Dispositivo desconectado ao bluetooth]
+  // Dispositivo desconectado ao bluetooth
   // Inicializa a reconexão com o bluetooth
   if (startBleReconnection)
   {
@@ -221,7 +220,7 @@ void bleInit()
   // Configura o dispositivo como Servidor BLE
   BLEServer *bleServer = BLEDevice::createServer();
   bleServer->setCallbacks(new BluetoothServerCallbacks());
-  
+
   // Cria o servico UART
   BLEService *bleService = bleServer->createService(SERVICE_UUID);
 
@@ -256,7 +255,8 @@ void bleReconnect(BLEServer *bleServer)
   Serial.println("Reconectado ao Bluetooth...");
 }
 
-void bleSend(String message) {
+void bleSend(String message)
+{
 
   int n = message.length();
 
@@ -265,8 +265,7 @@ void bleSend(String message) {
   // copying the contents of the
   // string to char array
   strcpy(txMessage, message.c_str());
-  
+
   bleSendCharacteristic->setValue(txMessage);
   bleSendCharacteristic->notify();
-
 }
